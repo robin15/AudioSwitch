@@ -82,11 +82,24 @@ class AudioSwitch
 
     static void Main(string[] args)
     {
+        // Set from args
         if (args.Length > 0)
         {
-            PolicyConfigClient.SetDefaultDevice(GetDeviceIdByName(args[0]));
-            PolicyConfigClient.SetDefaultDevice(GetDeviceIdByName(args[1]));
+            string id;
+            id = GetDeviceIdByName(args[0]);
+            if(id == null)
+            {
+                return;
+            }
+            PolicyConfigClient.SetDefaultDevice(id);
+            id = GetDeviceIdByName(args[1]);
+            if (id == null)
+            {
+                return;
+            }
+            PolicyConfigClient.SetDefaultDevice(id);
         }
+        // Set from CUI
         else
         {
             MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
@@ -100,10 +113,11 @@ class AudioSwitch
             if (int.TryParse(input, out int num) && num <= devices.Count)
             {
                 PolicyConfigClient.SetDefaultDevice(devices[num - 1].ID);
+                Console.WriteLine("SUCCESS: Default audio has been set.");
             }
             else
             {
-                Console.WriteLine("invalid value.");
+                Console.WriteLine("ERROR: Invalid parameter.");
             }
         }
         return;
