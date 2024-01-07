@@ -98,9 +98,11 @@ class AudioSwitch
         }
     }
 
+    [DllImport("kernel32.dll")]
+    static extern bool AllocConsole();
+
     static void Main(string[] args)
     {
-        
         if (args.Length > 0)
         {
             string speeker = null;
@@ -125,6 +127,7 @@ class AudioSwitch
         }
         else
         {
+            AllocConsole();
             MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
             var devices = enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active);
             foreach (var (device, index) in devices.Select((device, index) => (device, index)))
