@@ -76,30 +76,53 @@ class AudioSwitch
                 return device.ID;
             }
         }
-
         return null;
+    }
+
+    static void GetOptions(string[] args, ref string speeker, ref string microphone)
+    {
+        for (int i = 0; i < args.Length; i++)
+        {
+            switch (args[i])
+            {
+                case "-s":
+                    speeker = args[++i];
+                    break;
+                case "-m":
+                    microphone = args[++i];
+                    break;
+                default:
+                    Console.WriteLine($"ERROR: unknown option: {args[i]}");
+                    break;
+            }
+        }
     }
 
     static void Main(string[] args)
     {
-        // Set from args
+        
         if (args.Length > 0)
         {
-            string id;
-            id = GetDeviceIdByName(args[0]);
-            if(id == null)
+            string speeker = null;
+            string mic = null;
+            string id = null;
+
+            GetOptions(args, ref speeker, ref mic);
+            Console.WriteLine(speeker);
+            Console.WriteLine(mic);
+            id = GetDeviceIdByName(speeker);
+            if (id != null)
             {
-                return;
+                Console.WriteLine(id);
+                PolicyConfigClient.SetDefaultDevice(id);
             }
-            PolicyConfigClient.SetDefaultDevice(id);
-            id = GetDeviceIdByName(args[1]);
-            if (id == null)
+            id = GetDeviceIdByName(mic);
+            if (id != null)
             {
-                return;
+                Console.WriteLine(id);
+                PolicyConfigClient.SetDefaultDevice(id);
             }
-            PolicyConfigClient.SetDefaultDevice(id);
         }
-        // Set from CUI
         else
         {
             MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
@@ -110,10 +133,22 @@ class AudioSwitch
             }
             Console.Write("Select speeker device : ");
             string input = Console.ReadLine();
-            if (int.TryParse(input, out int num) && num <= devices.Count)
+            if (int.TryParse(input, out int s_num) && s_num <= devices.Count)
             {
-                PolicyConfigClient.SetDefaultDevice(devices[num - 1].ID);
-                Console.WriteLine("SUCCESS: Default audio has been set.");
+                PolicyConfigClient.SetDefaultDevice(devices[s_num - 1].ID);
+                Console.WriteLine($"SUCCESS: Default speeker has been set. ({devices[s_num - 1].FriendlyName})");
+            }
+            else
+            {
+                Console.WriteLine("ERROR: Invalid parameter.");
+            }
+
+            Console.Write("\nSelect microphone device : ");
+            input = Console.ReadLine();
+            if (int.TryParse(input, out int m_num) && m_num <= devices.Count)
+            {
+                PolicyConfigClient.SetDefaultDevice(devices[m_num - 1].ID);
+                Console.WriteLine($"SUCCESS: Default micriphone has been set.  ({devices[s_num - 1].FriendlyName})");
             }
             else
             {
