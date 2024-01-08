@@ -101,6 +101,7 @@ class AudioSwitch
     [DllImport("kernel32.dll")]
     static extern bool AllocConsole();
 
+
     static void Main(string[] args)
     {
         if (args.Length > 0)
@@ -134,7 +135,7 @@ class AudioSwitch
             {
                 Console.WriteLine(string.Join(" : ", index + 1, device.FriendlyName));
             }
-            Console.Write("Select speeker device : ");
+            Console.Write("\nSelect speeker device : ");
             string input = Console.ReadLine();
             if (int.TryParse(input, out int s_num) && s_num <= devices.Count)
             {
@@ -157,6 +158,8 @@ class AudioSwitch
             {
                 Console.WriteLine("ERROR: Invalid parameter.");
             }
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
         }
         return;
     }
