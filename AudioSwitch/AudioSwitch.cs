@@ -152,12 +152,13 @@ class AudioSwitch
             if (int.TryParse(input, out int m_num) && m_num <= devices.Count)
             {
                 PolicyConfigClient.SetDefaultDevice(devices[m_num - 1].ID);
-                Console.WriteLine($"SUCCESS: Default micriphone has been set.  ({devices[s_num - 1].FriendlyName})");
+                Console.WriteLine($"SUCCESS: Default micriphone has been set.  ({devices[m_num - 1].FriendlyName})");
             }
             else
             {
                 Console.WriteLine("ERROR: Invalid parameter.");
             }
+            Console.WriteLine("prompt => AudioSwitch.exe -s \"" + devices[s_num - 1].FriendlyName + "\" -m \"" + devices[m_num - 1].FriendlyName + "\"");
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
         }
